@@ -28,37 +28,46 @@ public class VoizFonicaInsuranceDaoImpl implements IVoizFonicaInsuranceDao{
 		Integer InsurancePeriod=custonerRegistration.getInsurancePeriod();
 		Long aadharNumber=custonerRegistration.getAadharNumber();
 		Long mobileNumber=custonerRegistration.getMobileNumber();
+		String regDate=custonerRegistration.getRegisteredDate();
 		
 		customer.setVechileType(vechileType);
 		customer.setInsurancePeriod(InsurancePeriod);
 		customer.setAadharNumber(aadharNumber);
 		customer.setMobileNumber(mobileNumber);
+		customer.setRegisteredDate(regDate);
 		
 		insuranceEntry.put(vechileNumber, customer);
-		
+		//System.out.println(customer.getRegisteredDate());
+		//System.out.println(customer.getAadharNumber());
 		
 		return insuranceEntry;
 	}
 
-	public float InsuranceValidation(String vechileNumber) {
-		SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Customer customer;
-		customer=insuranceEntry.get(insuranceEntry.get(vechileNumber));
-		
-		String registeredDate=customer.getRegisteredDate() ;
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern ( "dd/MM/yyyy" );
+	public Map<Date , Float> InsuranceValidation(String vechileNumber) {
 		LocalDate validUpto;
 		float daysBetween=0;
-		//Date registered = myFormat.parse(registeredDate);
+		Map<Date, Float> validity=new HashMap<Date, Float>();
+		System.out.println(vechileNumber);
+		Customer customer=insuranceEntry.get(vechileNumber);
+		String registeredDate=customer.getRegisteredDate() ;
+		int peroid=customer.getInsurancePeriod();
+		System.out.println(peroid);
+		
+	
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern ( "dd/MM/yyyy" );
 		LocalDate localDate = LocalDate.parse ( registeredDate , formatter );
-		validUpto = localDate.plusYears ( 1 );
+		validUpto = localDate.plusYears ( peroid );
 		LocalDate datenow=java.time.LocalDate.now();
+		
 		Date date = java.sql.Date.valueOf(validUpto);
 		Date datenow1 = java.sql.Date.valueOf(datenow);
 		long difference = date.getTime() - datenow1.getTime();
 		daysBetween = (difference / (1000*60*60*24));
 		
-		return daysBetween;
+		validity.put(date, daysBetween);
+		
+		return validity;
 	}
 
 }

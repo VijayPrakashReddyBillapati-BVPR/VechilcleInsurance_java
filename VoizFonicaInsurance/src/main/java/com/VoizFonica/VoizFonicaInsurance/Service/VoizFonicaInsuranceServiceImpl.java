@@ -3,6 +3,7 @@
  */
 package com.VoizFonica.VoizFonicaInsurance.Service;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.VoizFonica.VoizFonicaInsurance.DAO.IVoizFonicaInsuranceDao;
@@ -21,7 +22,7 @@ public class VoizFonicaInsuranceServiceImpl implements IVoizFonicaInsuranceServi
 		return dao.Registration(custonerRegistration);
 	}
 
-	public float InsuranceValidation(String vechileNumber) {
+	public Map<Date, Float> InsuranceValidation(String vechileNumber) {
 
 
 		return dao.InsuranceValidation(vechileNumber);

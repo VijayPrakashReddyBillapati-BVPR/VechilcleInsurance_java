@@ -1,5 +1,7 @@
 package com.VoizFonica.VoizFonicaInsurance.UI;
 
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -9,6 +11,7 @@ import com.VoizFonica.VoizFonicaInsurance.bean.Customer;
 
 public class MainUI {
 	Scanner scan =new Scanner(System.in);
+	Map<String, Customer> object = null;
 	static IVoizFonicaInsuranceService service = new VoizFonicaInsuranceServiceImpl();
 	public Customer custonerRegistration()
 	{
@@ -44,30 +47,40 @@ public class MainUI {
 		
 	}
 	
-	public static void firstCalled()
+	public void firstCalled()
 	{
-		System.out.println("select the option to proceed \n 1. Vechile Insurace Registration \n 2.Insurance Validation \n 3.Exit");
+		System.out.println("select the option to proceed \n 1.Vechile Insurace Registration \n 2.Insurance Validation \n 3.Exit");
 		Scanner scan =new Scanner(System.in);
 		int option = scan.nextInt();
 		MainUI ui= new MainUI();
-		Map<String, Customer> object = null;
 		switch(option)
 		{
-		case 1:   object=service.Registration(ui.custonerRegistration());
+		case 1:   service.Registration(ui.custonerRegistration());
 		firstCalled();
 		
-		break;
-		case 2: Customer customer;
-		customer=object.get(object.keySet());
-			float days=service.InsuranceValidation(customer.getVechileNumber());
-			System.out.println(days+" days left for renewal ");
+		case 2: //Customer customer = null;
+		
+		//System.out.println(customer.getVechileNumber());
+			System.out.println("enter vechile number");
+			String number=scan.next();
+			Map<Date , Float> daysvalid=service.InsuranceValidation(number);
+			//Iterator it=daysvalid.keySet().iterator();
+			//while(it.hasNext())
+			//{
+				System.out.println(daysvalid.values() +" days left for renewal "+"\n valid upto " +daysvalid.keySet());
+			//}
+			
+			
+			System.out.println();
 		break;
 		case 3:System.exit(0);
 		}
 	}
 
 	public static void main(String[] args) {
-		firstCalled();
+		MainUI ui1= new MainUI();
+		ui1.firstCalled();
+		
 
 	}
 
